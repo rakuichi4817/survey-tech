@@ -6,6 +6,9 @@ const researchDir = path.join(root, "research")
 const docsDir = path.join(root, "site", "src", "content", "docs")
 
 const markdownExtension = ".md"
+const siteBasePath = "/survey-tech"
+const sourceRepositoryUrl =
+  "https://github.com/rakuichi4817/survey-tech/blob/main"
 const categories = [
   {
     directory: "library-catalogs",
@@ -50,7 +53,10 @@ async function main() {
     const relativePath = path.relative(researchDir, file)
     const targetPath = path.join(docsDir, relativePath)
     const raw = await readFile(file, "utf8")
-    const content = ensureFrontmatter(raw, relativePath)
+    const content = ensureFrontmatter(
+      rewriteLinks(raw, relativePath),
+      relativePath,
+    )
 
     await mkdir(path.dirname(targetPath), { recursive: true })
     await writeFile(targetPath, content)
@@ -86,14 +92,80 @@ opencode runで作成した技術調査ノートを閲覧するためのサイ�
 
 ## Categories
 
-- [Library Catalogs](/library-catalogs/)
-- [Framework Surveys](/framework-surveys/)
-- [Comparisons](/comparisons/)
-- [PoC Plans](/poc-plans/)
-- [Release Notes](/release-notes/)
-- [Cheatsheets](/cheatsheets/)
+- [Library Catalogs](${siteUrl("library-catalogs")})
+- [Framework Surveys](${siteUrl("framework-surveys")})
+- [Comparisons](${siteUrl("comparisons")})
+- [PoC Plans](${siteUrl("poc-plans")})
+- [Release Notes](${siteUrl("release-notes")})
+- [Cheatsheets](${siteUrl("cheatsheets")})
 `,
   )
+}
+
+function rewriteLinks(content: string, relativePath: string) {
+  return content.replace(
+    /(?<!!)\[([^\]]+)]\(([^)\s]+)(?:\s+"[^"]*")?\)/g,
+    (match, label: string, target: string) => {
+      const rewrittenTarget = rewriteLinkTarget(target, relativePath)
+      return rewrittenTarget === target
+        ? match
+        : `[${label}](${rewrittenTarget})`
+    },
+  )
+}
+
+function rewriteLinkTarget(target: string, relativePath: string) {
+  if (isExternalLink(target) || target.startsWith("#")) {
+    return target
+  }
+
+  if (target.startsWith("/")) {
+    return target.startsWith(`${siteBasePath}/`)
+      ? target
+      : `${siteBasePath}${target}`
+  }
+
+  const [targetPath, hash = ""] = target.split("#", 2)
+
+  if (!targetPath.endsWith(markdownExtension)) {
+    return target
+  }
+
+  const resolvedPath = path.posix.normalize(
+    path.posix.join(path.posix.dirname(toPosixPath(relativePath)), targetPath),
+  )
+
+  if (isResearchPagePath(resolvedPath)) {
+    const pagePath = resolvedPath.slice(0, -markdownExtension.length)
+    return `${siteUrl(pagePath)}${hash ? `#${hash}` : ""}`
+  }
+
+  const sourcePath = path.posix.normalize(
+    path.posix.join(
+      "research",
+      path.posix.dirname(toPosixPath(relativePath)),
+      targetPath,
+    ),
+  )
+  return `${sourceRepositoryUrl}/${sourcePath}${hash ? `#${hash}` : ""}`
+}
+
+function isExternalLink(target: string) {
+  return /^[a-z][a-z0-9+.-]*:/i.test(target) || target.startsWith("//")
+}
+
+function isResearchPagePath(targetPath: string) {
+  return categories.some((category) =>
+    targetPath.startsWith(`${category.directory}/`),
+  )
+}
+
+function siteUrl(pagePath: string) {
+  return `${siteBasePath}/${pagePath.replace(/^\/+|\/+$/g, "")}/`
+}
+
+function toPosixPath(filePath: string) {
+  return filePath.split(path.sep).join(path.posix.sep)
 }
 
 async function collectMarkdownFiles(directory: string): Promise<string[]> {
