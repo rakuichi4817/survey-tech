@@ -1,0 +1,23 @@
+{
+  "name": "survey-tech",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "tsx scripts/sync-research-to-site.ts",
+    "site:dev": "pnpm sync && pnpm --filter survey-tech-site dev",
+    "site:build": "pnpm sync && pnpm --filter survey-tech-site build",
+    "site:preview": "pnpm --filter survey-tech-site preview",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "biome lint .",
+    "check": "pnpm lint && pnpm typecheck && pnpm site:check",
+    "typecheck": "tsc --noEmit",
+    "site:check": "pnpm sync && pnpm --filter survey-tech-site check"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "latest",
+    "@types/node": "latest",
+    "tsx": "latest",
+    "typescript": "latest"
+  }
+}
