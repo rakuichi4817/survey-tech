@@ -1,0 +1,51 @@
+[tools]
+node = "24"
+pnpm = "latest"
+
+[tasks.install]
+description = "Install workspace dependencies"
+run = "pnpm install"
+
+[tasks.ci-install]
+description = "Install workspace dependencies with the lockfile in CI"
+run = "pnpm install --frozen-lockfile"
+
+[tasks.sync]
+description = "Sync research Markdown into the Astro Starlight content directory"
+run = "pnpm sync"
+
+[tasks.dev]
+description = "Sync research Markdown and start the Astro Starlight dev server"
+run = "pnpm site:dev"
+
+[tasks.build]
+description = "Sync research Markdown and build the static site"
+run = "pnpm site:build"
+
+[tasks.preview]
+description = "Preview the built static site"
+run = "pnpm site:preview"
+
+[tasks.format]
+description = "Format project files with Biome"
+run = "pnpm format"
+
+[tasks.format-check]
+description = "Check formatting with Biome without writing changes"
+run = "pnpm format:check"
+
+[tasks.lint]
+description = "Lint project files with Biome"
+run = "pnpm lint"
+
+[tasks.check]
+description = "Run lint, TypeScript, and Astro checks"
+run = "pnpm check"
+
+[tasks.typecheck]
+description = "Run TypeScript checks"
+run = "pnpm typecheck"
+
+[tasks.site-check]
+description = "Run Astro checks for the Starlight site"
+run = "pnpm site:check"
