@@ -1,8 +1,8 @@
-# Copilot Review Instructions
+# Copilotレビュー指示
 
 このリポジトリは、`opencode run`で作成した技術調査Markdownを`research/`配下に蓄積し、Astro Starlightで静的サイトとして閲覧するためのプロジェクトです。
 
-## Review Priorities
+## レビューで重視すること
 
 - `research/`配下のMarkdownが、適切なカテゴリに配置されているか確認してください。
 - `site/src/content/docs/`は生成物です。直接編集されている場合は指摘してください。
@@ -13,7 +13,7 @@
 - Markdown同士の関連リンクは、`research/`配下の原本Markdownへの相対リンクになっているか確認してください。
 - 新しいカテゴリを追加した場合は、`research/`、`scripts/sync-research-to-site.ts`、`site/astro.config.mjs`、READMEが一貫して更新されているか確認してください。
 
-## Project Rules
+## プロジェクトのルール
 
 - 調査Markdownの原本は`research/`配下です。
 - Starlight用の`site/src/content/docs/`は`scripts/sync-research-to-site.ts`で生成されます。
@@ -21,7 +21,7 @@
 - Node.jsとpnpmは`.mise.toml`で管理します。
 - formatter/linterはBiomeです。
 
-## Expected Checks
+## 期待する検査
 
 PRでは次のコマンドが通ることを重視してください。
 
@@ -31,7 +31,7 @@ mise run check
 mise run build
 ```
 
-## Markdown Categories
+## Markdownカテゴリ
 
 - `research/library-catalogs/`: ライブラリ、ツール、API群の便利機能カタログ。
 - `research/framework-surveys/`: フレームワーク、技術要素、設計手法の採用判断調査。

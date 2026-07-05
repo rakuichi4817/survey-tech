@@ -19,10 +19,5 @@
     "@types/node": "latest",
     "tsx": "latest",
     "typescript": "latest"
-  },
-  "pnpm": {
-    "ignoredBuiltDependencies": [
-      "esbuild"
-    ]
   }
 }

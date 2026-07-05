@@ -1,28 +1,30 @@
 ---
 name: research-writer
-description: Use when an opencode run prompt asks for technology, library, framework, tool, API, release, comparison, PoC, or cheatsheet research. Writes or updates Markdown under research/ without asking for the destination.
+description: 技術、ライブラリ、フレームワーク、ツール、API、リリース、比較、PoC、チートシートの調査依頼で使用します。保存先を質問せず、research/配下へMarkdownを作成または更新します。
 ---
 
 # Research Writer
 
-Use this skill when the user asks for a technology investigation, even if the request is vague, such as "VueUseで使える便利ツールを教えて" or "Honoを採用するべきか調べて".
+ユーザーが技術調査を依頼したときに使用します。依頼が「VueUseで使える便利ツールを教えて」「Honoを採用するべきか調べて」のように曖昧でも、このskillの方針で処理します。
 
-## Goal
+## 目的
 
-Create a useful Markdown research page that can be browsed in the Astro Starlight site. Do not only answer in chat. Write or update a file under `research/`.
+Astro Starlightサイトで閲覧できる、有用なMarkdown調査ページを作成します。チャット回答だけで終わらせず、`research/`配下にファイルを作成または更新してください。
 
-## Destination Selection
+## 保存先の選び方
 
-Choose the destination without asking the user.
+保存先はユーザーに質問せず、依頼内容から判断します。
 
-- `research/library-catalogs/`: library, package, API, plugin, utility, composable, SDK, or tool feature catalog.
-- `research/framework-surveys/`: framework, runtime, platform, architecture, design method, or adoption decision.
-- `research/comparisons/`: comparison between two or more technologies, tools, libraries, or approaches.
-- `research/poc-plans/`: PoC, spike, experiment plan, validation plan, or trial roadmap.
-- `research/release-notes/`: release notes, migration guide, breaking changes, new version summary.
-- `research/cheatsheets/`: concise command/API/reference sheet intended for quick implementation lookup.
+- `research/library-catalogs/`: ライブラリ、パッケージ、API、プラグイン、ユーティリティ、composable、SDK、ツールの機能カタログ。
+- `research/framework-surveys/`: フレームワーク、ランタイム、プラットフォーム、アーキテクチャ、設計手法、採用判断。
+- `research/comparisons/`: 複数の技術、ツール、ライブラリ、手法の比較。
+- `research/poc-plans/`: PoC、スパイク、実験計画、検証計画、試行ロードマップ。
+- `research/release-notes/`: リリースノート、移行ガイド、破壊的変更、新バージョンまとめ。
+- `research/cheatsheets/`: 実装時にすばやく参照するための短いコマンド、API、参照表。
 
-Use lowercase kebab-case file names. Examples:
+ファイル名は英小文字のkebab-caseにします。
+
+例:
 
 - `research/library-catalogs/vueuse.md`
 - `research/framework-surveys/astro.md`
@@ -31,32 +33,32 @@ Use lowercase kebab-case file names. Examples:
 - `research/release-notes/vue-3-5.md`
 - `research/cheatsheets/vueuse.md`
 
-## Existing Files
+## 既存ファイルの扱い
 
-Before writing, check whether a likely target file already exists.
+書き込み前に、想定される保存先の既存ファイルを確認します。
 
-- If it exists, read it and update it instead of overwriting blindly.
-- Preserve useful existing notes and references.
-- If the new request supersedes old content, restructure the page and keep old useful details under appropriate sections.
-- If several related pages exist, link them from `## 関連ページ`.
+- 既存ファイルがある場合は、無条件上書きせず読んで更新する。
+- 有用な既存メモと参照URLを残す。
+- 新しい依頼が既存内容を置き換える場合は、ページを再構成し、有用な古い内容を適切な節に残す。
+- 関連ページが複数ある場合は、`## 関連ページ`からリンクする。
 
-## Research Standards
+## 調査基準
 
-- Prefer official documentation first.
-- Also use GitHub repository docs, npm/package registry pages, release notes, changelogs, and official examples when useful.
-- Keep reference URLs in the Markdown, not only in the final chat response.
-- Mark uncertain information as uncertain.
-- Avoid hype. Explain practical usage, tradeoffs, maintenance cost, and adoption risk.
-- Keep code examples minimal and focused.
-- Include Japanese explanations unless the user asks otherwise.
+- 公式ドキュメントを最優先する。
+- 必要に応じてGitHubリポジトリ、npm/package registry、リリースノート、changelog、公式exampleも使う。
+- 参照URLは最終回答だけでなくMarkdown本文に残す。
+- 不確かな情報は不確かと明記する。
+- 宣伝文句に寄せず、実務での使いどころ、トレードオフ、保守コスト、採用リスクを説明する。
+- コード例は短く、焦点を絞る。
+- ユーザーが指定しない限り、日本語で説明する。
 
-## Format Selection
+## 形式の選び方
 
-Choose the format that best fits the request.
+依頼内容に合う形式を選びます。
 
-### Library Catalog
+### ライブラリカタログ
 
-Use for packages like VueUse, TanStack Query, Lodash, Zod, or date-fns.
+VueUse、TanStack Query、Lodash、Zod、date-fnsなどのパッケージ調査で使います。
 
 ```markdown
 ---
@@ -78,7 +80,7 @@ description: <description>
 ## 追加調査TODO
 ```
 
-Each feature detail should include:
+各機能詳細には次を含めます。
 
 - 何ができるか
 - 使いどころ
@@ -86,9 +88,9 @@ Each feature detail should include:
 - 注意点
 - 参照URL
 
-### Adoption Survey
+### 採用判断調査
 
-Use for adopting a framework, runtime, architecture, or large tool.
+フレームワーク、ランタイム、アーキテクチャ、大きめのツールを採用するか判断する調査で使います。
 
 ```markdown
 ---
@@ -113,9 +115,9 @@ description: <description>
 ## 追加調査TODO
 ```
 
-### Comparison
+### 比較調査
 
-Use for "A vs B", "compare", "比較", or selecting among options.
+「A vs B」「比較」「選定」など、複数候補から選ぶ依頼で使います。
 
 ```markdown
 ---
@@ -137,9 +139,9 @@ description: <description>
 ## 追加調査TODO
 ```
 
-### PoC Plan
+### PoC計画
 
-Use for validation plans, trials, spikes, or "小さく試す".
+検証計画、試行、スパイク、「小さく試す」依頼で使います。
 
 ```markdown
 ---
@@ -163,9 +165,9 @@ description: <description>
 ## 追加調査TODO
 ```
 
-### Release Notes
+### リリースノート
 
-Use for versions, migration, breaking changes, or changelogs.
+バージョン、移行、破壊的変更、changelogのまとめで使います。
 
 ```markdown
 ---
@@ -185,9 +187,9 @@ description: <description>
 ## 参照情報
 ```
 
-### Cheatsheet
+### チートシート
 
-Use for compact reference pages.
+短い参照ページで使います。
 
 ```markdown
 ---
@@ -205,10 +207,10 @@ description: <description>
 ## 参照情報
 ```
 
-## Final Response
+## 最終回答
 
-After editing, keep the final response short. Include:
+編集後の最終回答は短くします。次を含めてください。
 
-- saved file path
-- whether a new file was created or an existing file was updated
-- next command: `mise run dev`
+- 保存先ファイルパス
+- 新規作成か既存更新か
+- 次の閲覧コマンド: `mise run dev`

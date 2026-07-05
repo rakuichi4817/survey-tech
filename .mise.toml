@@ -1,51 +1,51 @@
 [tools]
 node = "24"
-pnpm = "latest"
+pnpm = "11.9.0"
 
 [tasks.install]
-description = "Install workspace dependencies"
+description = "ワークスペースの依存関係をインストールする"
 run = "pnpm install"
 
 [tasks.ci-install]
-description = "Install workspace dependencies with the lockfile in CI"
-run = "pnpm install --frozen-lockfile"
+description = "CI向けにlockfile固定で依存関係をインストールする"
+run = "CI=true pnpm install --frozen-lockfile"
 
 [tasks.sync]
-description = "Sync research Markdown into the Astro Starlight content directory"
+description = "調査MarkdownをAstro Starlightのcontentディレクトリへ同期する"
 run = "pnpm sync"
 
 [tasks.dev]
-description = "Sync research Markdown and start the Astro Starlight dev server"
+description = "調査Markdownを同期してAstro Starlightの開発サーバーを起動する"
 run = "pnpm site:dev"
 
 [tasks.build]
-description = "Sync research Markdown and build the static site"
+description = "調査Markdownを同期して静的サイトをビルドする"
 run = "pnpm site:build"
 
 [tasks.preview]
-description = "Preview the built static site"
+description = "ビルド済み静的サイトをプレビューする"
 run = "pnpm site:preview"
 
 [tasks.format]
-description = "Format project files with Biome"
+description = "Biomeでプロジェクトファイルを整形する"
 run = "pnpm format"
 
 [tasks.format-check]
-description = "Check formatting with Biome without writing changes"
+description = "Biomeでファイルを書き換えずに整形状態を検査する"
 run = "pnpm format:check"
 
 [tasks.lint]
-description = "Lint project files with Biome"
+description = "Biomeでプロジェクトファイルをlintする"
 run = "pnpm lint"
 
 [tasks.check]
-description = "Run lint, TypeScript, and Astro checks"
+description = "lint、TypeScript、Astroの検査を実行する"
 run = "pnpm check"
 
 [tasks.typecheck]
-description = "Run TypeScript checks"
+description = "TypeScriptの検査を実行する"
 run = "pnpm typecheck"
 
 [tasks.site-check]
-description = "Run Astro checks for the Starlight site"
+description = "StarlightサイトのAstro検査を実行する"
 run = "pnpm site:check"

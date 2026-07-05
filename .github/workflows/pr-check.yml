@@ -1,4 +1,4 @@
-name: PR Check
+name: PRチェック
 
 on:
   pull_request:
@@ -14,26 +14,26 @@ concurrency:
 
 jobs:
   check:
-    name: Check
+    name: 検査
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: リポジトリをチェックアウト
         uses: actions/checkout@v5
 
-      - name: Setup mise
+      - name: miseをセットアップ
         uses: jdx/mise-action@v3
         with:
           install: true
           cache: true
 
-      - name: Install dependencies
+      - name: 依存関係をインストール
         run: mise run ci-install
 
-      - name: Format check
+      - name: フォーマットを検査
         run: mise run format-check
 
-      - name: Check
+      - name: 型とサイトを検査
         run: mise run check
 
-      - name: Build
+      - name: 静的サイトをビルド
         run: mise run build
