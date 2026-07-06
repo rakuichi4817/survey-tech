@@ -1,0 +1,104 @@
+name: Research and deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: "Research request for OpenCode"
+        required: true
+        type: string
+      model:
+        description: "OpenCode model in provider/model format"
+        required: true
+        default: "anthropic/claude-sonnet-4-5"
+        type: string
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  research-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.9.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install OpenCode
+        run: npm install -g opencode-ai@latest
+
+      - name: Run OpenCode research task
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          OPENCODE_DISABLE_AUTOUPDATE: "true"
+          OPENCODE_MODEL: ${{ inputs.model }}
+          RESEARCH_PROMPT: ${{ inputs.prompt }}
+        run: opencode run --model "$OPENCODE_MODEL" --auto "$RESEARCH_PROMPT"
+
+      - name: Sync research into Starlight content
+        run: pnpm sync
+
+      - name: Check site content
+        run: pnpm site:check
+
+      - name: Detect generated changes
+        id: changes
+        run: |
+          if [ -z "$(git status --porcelain -- research site/src/content/docs)" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit generated research
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research site/src/content/docs
+          git commit -m "Add generated research notes"
+          git push origin HEAD:${GITHUB_REF_NAME}
+
+      - name: Build site
+        run: pnpm site:build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
